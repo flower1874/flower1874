@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.oj.onlinejudge.domain.enums.Role;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -38,7 +40,7 @@ public class Users implements Serializable {
     private String password;
 
     @ApiModelProperty(value = "角色：学生或教师")
-    private String role;
+    private Role role;
 
     @ApiModelProperty(value = "电子邮件地址")
     private String email;

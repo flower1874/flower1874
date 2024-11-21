@@ -16,6 +16,8 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,7 +42,7 @@ public class AiController {
         this.generation = generation;
     }
 
-    @PostMapping(value = "/send", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/send")
     public Mono<Map<String, String>> aiTalk(@RequestBody String question, HttpServletResponse response) {
         // 构建消息对象
         Message message = Message.builder().role(Role.USER.getValue()).content(question).build();
@@ -56,10 +58,16 @@ public class AiController {
                 .apiKey(appKey)
                 .build();
 
+        Instant start = Instant.now();
+
         // 执行文本生成操作，并等待结果完成
         return Mono.fromCallable(() -> {
             try {
                 GenerationResult result = generation.call(param);
+                Instant end = Instant.now();
+                Duration duration = Duration.between(start, end);
+                System.out.println("API 调用耗时: " + duration.toMillis() + " 毫秒");
+
                 String content = result.getOutput().getChoices().get(0).getMessage().getContent();
                 Map<String, String> responseMap = new HashMap<>();
                 responseMap.put("answer", content);
@@ -76,6 +84,27 @@ public class AiController {
             }
         }).subscribeOn(Schedulers.boundedElastic());
     }
+//        // 执行文本生成操作，并等待结果完成
+//        return Mono.fromCallable(() -> {
+//            try {
+//                GenerationResult result = generation.call(param);
+//                System.out.println(result);
+//                String content = result.getOutput().getChoices().get(0).getMessage().getContent();
+//                Map<String, String> responseMap = new HashMap<>();
+//                responseMap.put("answer", content);
+//                return responseMap;
+//            } catch (NoApiKeyException | InputRequiredException e) {
+//                Map<String, String> errorResponse = new HashMap<>();
+//                errorResponse.put("error", "请求错误: " + e.getMessage());
+//                return errorResponse;
+//            } catch (Exception e) {
+//                // 其他异常处理
+//                Map<String, String> errorResponse = new HashMap<>();
+//                errorResponse.put("error", "内部错误: " + e.getMessage());
+//                return errorResponse;
+//            }
+//        }).subscribeOn(Schedulers.boundedElastic());
+//    }
     @PostMapping(value = "/optimize-code", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<Map<String, String>> optimizeCode(@RequestBody String code, HttpServletResponse response) {
         // 构建提示词
