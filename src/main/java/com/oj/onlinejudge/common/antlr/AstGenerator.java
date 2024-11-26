@@ -42,6 +42,7 @@ public class AstGenerator {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         CPP14Parser parser = new CPP14Parser(tokens);
 
+
         ParseTree tree = parser.translationUnit();
         return FingerprintExtractor.extractFingerprint(tree);
     }

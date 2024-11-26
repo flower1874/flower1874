@@ -1,0 +1,25 @@
+@relation CodeStyle
+
+@attribute maxLineLength numeric
+@attribute avgIndentation numeric
+@attribute variableCount numeric
+@attribute functionCount numeric
+@attribute commentCount numeric
+@attribute stringCount numeric
+@attribute keywordCount numeric
+@attribute levensteinDistance numeric
+@attribute containsTODO numeric
+@attribute containsFIXME numeric
+@attribute class {good, poor}
+
+@data
+40.0,0.0,5.0,1.0,0.0,1.0,4.0,106.0,0.0,0.0,poor
+70.0,4.0,5.0,2.0,3.0,1.0,7.0,50.0,0.0,0.0,good
+90.0,4.0,5.0,2.0,3.0,1.0,7.0,50.0,0.0,0.0,poor
+70.0,4.0,5.0,2.0,0.0,1.0,7.0,50.0,0.0,0.0,poor
+70.0,4.0,5.0,2.0,3.0,1.0,7.0,50.0,1.0,0.0,poor
+70.0,4.0,5.0,2.0,3.0,1.0,7.0,50.0,0.0,1.0,poor
+70.0,0.0,5.0,3.0,3.0,1.0,7.0,50.0,0.0,0.0,poor
+80.0,4.0,5.0,2.0,3.0,1.0,7.0,50.0,0.0,0.0,good
+60.0,4.0,5.0,2.0,3.0,1.0,7.0,50.0,0.0,0.0,good
+50.0,4.0,5.0,2.0,3.0,1.0,7.0,50.0,0.0,0.0,good
