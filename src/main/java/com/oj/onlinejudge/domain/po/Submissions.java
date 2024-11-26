@@ -46,6 +46,9 @@ public class Submissions implements Serializable {
     @ApiModelProperty(value = "提交状态")
     private String status;
 
+    @ApiModelProperty(value = "代码指纹")
+    private String fingerprint;
+
     @ApiModelProperty(value = "编译或运行错误的具体信息")
     private String message;
 

@@ -29,14 +29,10 @@ public class VariableDeclarationChecker {
         for (String line : lines) {
             line = line.trim();
             if (line.endsWith(";")) {
-                String[] parts = line.split("\\s+");
-                if (parts.length >= 2) {
-                    String type = parts[0];
-                    for (int i = 1; i < parts.length; i++) {
-                        if (parts[i].matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
-                            declaredVariables.add(parts[i]);
-                        }
-                    }
+                Matcher matcher = Pattern.compile("(\\bint|char|float|double|bool|std::string|std::vector<.*>|std::map<.*>|std::set<.*>|std::list<.*>|std::pair<.*>|std::array<.*>|std::unique_ptr<.*>|std::shared_ptr<.*>)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*(=|.*)?;").matcher(line);
+                while (matcher.find()) {
+                    String variable = matcher.group(2);
+                    declaredVariables.add(variable);
                 }
             }
         }
@@ -47,7 +43,7 @@ public class VariableDeclarationChecker {
             Matcher matcher = Pattern.compile("\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b").matcher(line);
             while (matcher.find()) {
                 String variable = matcher.group(1);
-                if (!declaredVariables.contains(variable) && !isKeyword(variable)) {
+                if (!declaredVariables.contains(variable) && !isKeyword(variable) && !isStandardLibraryFunction(variable)) {
                     usedVariables.add(variable);
                 }
             }
@@ -84,5 +80,19 @@ public class VariableDeclarationChecker {
                 "unsigned", "using", "virtual", "void", "volatile", "wchar_t", "while", "xor", "xor_eq"
         ));
         return keywords.contains(word);
+    }
+
+    /**
+     * 检查是否为标准库函数
+     *
+     * @param word 要检查的单词
+     * @return 如果是标准库函数，返回 true；否则返回 false
+     */
+    private static boolean isStandardLibraryFunction(String word) {
+        Set<String> standardLibraryFunctions = new HashSet<>(Arrays.asList(
+                "std::cout", "std::endl", "std::cin", "std::cerr", "std::clog", "std::string", "std::vector", "std::map",
+                "std::set", "std::list", "std::pair", "std::array", "std::unique_ptr", "std::shared_ptr"
+        ));
+        return standardLibraryFunctions.contains(word);
     }
 }
